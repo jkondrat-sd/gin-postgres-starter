@@ -3,6 +3,7 @@
 package service
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"strconv"
@@ -11,22 +12,28 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/nattakornwarisnarathorn/example-gin/internal/config"
 	"github.com/nattakornwarisnarathorn/example-gin/internal/dto"
+	"github.com/nattakornwarisnarathorn/example-gin/internal/event"
 	"github.com/nattakornwarisnarathorn/example-gin/internal/model"
+	"github.com/nattakornwarisnarathorn/example-gin/internal/queue"
 	"github.com/nattakornwarisnarathorn/example-gin/internal/repository"
+	"github.com/nattakornwarisnarathorn/example-gin/pkg/logger"
+	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
 type AuthService struct {
-	users repository.UserRepository
-	cfg   *config.Config
+	users  repository.UserRepository
+	cfg    *config.Config
+	jobs   queue.Publisher
+	events event.Publisher
 }
 
-func NewAuthService(users repository.UserRepository, cfg *config.Config) *AuthService {
-	return &AuthService{users: users, cfg: cfg}
+func NewAuthService(users repository.UserRepository, cfg *config.Config, jobs queue.Publisher, events event.Publisher) *AuthService {
+	return &AuthService{users: users, cfg: cfg, jobs: jobs, events: events}
 }
 
-func (s *AuthService) Register(req dto.RegisterRequest) (*dto.AuthResponse, error) {
+func (s *AuthService) Register(ctx context.Context, req dto.RegisterRequest) (*dto.AuthResponse, error) {
 	if _, err := s.users.FindByEmail(req.Email); err == nil {
 		return nil, ErrConflict
 	} else if !errors.Is(err, gorm.ErrRecordNotFound) {
@@ -53,10 +60,41 @@ func (s *AuthService) Register(req dto.RegisterRequest) (*dto.AuthResponse, erro
 		return nil, err
 	}
 
+	go s.dispatchRegistrationSideEffects(context.WithoutCancel(ctx), user)
+
 	return &dto.AuthResponse{
 		Token: token,
 		User:  dto.ToUserResponse(user),
 	}, nil
+}
+
+func (s *AuthService) dispatchRegistrationSideEffects(ctx context.Context, user model.User) {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	if s.jobs != nil {
+		err := s.jobs.EnqueueWelcomeEmail(ctx, queue.WelcomeEmailPayload{
+			UserID: user.ID,
+			Email:  user.Email,
+			Name:   user.Name,
+		})
+		if err != nil {
+			logger.Log.Warn("welcome email job enqueue failed", zap.Error(err), zap.Uint("user_id", user.ID))
+		}
+	}
+
+	if s.events != nil {
+		err := s.events.PublishUserRegistered(ctx, event.UserRegisteredEvent{
+			EventType: event.EventUserRegistered,
+			UserID:    user.ID,
+			Email:     user.Email,
+			Name:      user.Name,
+			CreatedAt: user.CreatedAt,
+		})
+		if err != nil {
+			logger.Log.Warn("user registered event publish failed", zap.Error(err), zap.Uint("user_id", user.ID))
+		}
+	}
 }
 
 func (s *AuthService) Login(req dto.LoginRequest) (*dto.AuthResponse, error) {

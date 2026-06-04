@@ -11,17 +11,22 @@ import (
 )
 
 type Config struct {
-	AppName        string `mapstructure:"APP_NAME"`
-	AppEnv         string `mapstructure:"APP_ENV"`
-	AppPort        string `mapstructure:"APP_PORT"`
-	DBHost         string `mapstructure:"DB_HOST"`
-	DBPort         string `mapstructure:"DB_PORT"`
-	DBUser         string `mapstructure:"DB_USER"`
-	DBPassword     string `mapstructure:"DB_PASSWORD"`
-	DBName         string `mapstructure:"DB_NAME"`
-	DBSSLMode      string `mapstructure:"DB_SSLMODE"`
-	JWTSecret      string `mapstructure:"JWT_SECRET"`
-	JWTExpireHours int    `mapstructure:"JWT_EXPIRE_HOURS"`
+	AppName            string `mapstructure:"APP_NAME"`
+	AppEnv             string `mapstructure:"APP_ENV"`
+	AppPort            string `mapstructure:"APP_PORT"`
+	DBHost             string `mapstructure:"DB_HOST"`
+	DBPort             string `mapstructure:"DB_PORT"`
+	DBUser             string `mapstructure:"DB_USER"`
+	DBPassword         string `mapstructure:"DB_PASSWORD"`
+	DBName             string `mapstructure:"DB_NAME"`
+	DBSSLMode          string `mapstructure:"DB_SSLMODE"`
+	JWTSecret          string `mapstructure:"JWT_SECRET"`
+	JWTExpireHours     int    `mapstructure:"JWT_EXPIRE_HOURS"`
+	RedisAddr          string `mapstructure:"REDIS_ADDR"`
+	WorkerConcurrency  int    `mapstructure:"WORKER_CONCURRENCY"`
+	KafkaBrokers       string `mapstructure:"KAFKA_BROKERS"`
+	KafkaUserTopic     string `mapstructure:"KAFKA_USER_TOPIC"`
+	KafkaConsumerGroup string `mapstructure:"KAFKA_CONSUMER_GROUP"`
 }
 
 func Load() (*Config, error) {
@@ -38,6 +43,11 @@ func Load() (*Config, error) {
 	viper.SetDefault("DB_SSLMODE", "disable")
 	viper.SetDefault("JWT_SECRET", "change-me-in-production")
 	viper.SetDefault("JWT_EXPIRE_HOURS", 24)
+	viper.SetDefault("REDIS_ADDR", "localhost:6379")
+	viper.SetDefault("WORKER_CONCURRENCY", 5)
+	viper.SetDefault("KAFKA_BROKERS", "localhost:9092")
+	viper.SetDefault("KAFKA_USER_TOPIC", "user.events")
+	viper.SetDefault("KAFKA_CONSUMER_GROUP", "example-gin-consumer")
 
 	viper.AutomaticEnv()
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))

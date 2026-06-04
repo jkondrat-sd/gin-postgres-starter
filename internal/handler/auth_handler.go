@@ -17,7 +17,7 @@ func (h *Handler) Register(c *gin.Context) {
 		return
 	}
 
-	res, err := h.auth.Register(req)
+	res, err := h.auth.Register(c.Request.Context(), req)
 	if err != nil {
 		writeServiceError(c, err)
 		return

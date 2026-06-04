@@ -7,7 +7,9 @@ import ( // Starts the list of packages this file needs.
 
 	"github.com/gin-gonic/gin"                                           // Provides the HTTP server and Gin mode settings.
 	"github.com/nattakornwarisnarathorn/example-gin/internal/config"     // Loads environment-based application config.
+	"github.com/nattakornwarisnarathorn/example-gin/internal/event"      // Creates Kafka-backed domain event publishers.
 	"github.com/nattakornwarisnarathorn/example-gin/internal/handler"    // Creates HTTP handlers from services.
+	"github.com/nattakornwarisnarathorn/example-gin/internal/queue"      // Creates Redis-backed background job publishers.
 	"github.com/nattakornwarisnarathorn/example-gin/internal/repository" // Creates database repositories.
 	"github.com/nattakornwarisnarathorn/example-gin/internal/routes"     // Registers Gin routes and middleware.
 	"github.com/nattakornwarisnarathorn/example-gin/internal/service"    // Creates business-logic services.
@@ -38,12 +40,16 @@ func main() { // Starts the API process.
 		logger.Log.Fatal("database migration failed", zap.Error(err)) // Logs migration failure and stops startup.
 	} // Ends the migration error check.
 
-	userRepo := repository.NewUserRepository(db)       // Creates the user database access layer.
-	projectRepo := repository.NewProjectRepository(db) // Creates the project database access layer.
+	userRepo := repository.NewUserRepository(db)                                    // Creates the user database access layer.
+	projectRepo := repository.NewProjectRepository(db)                              // Creates the project database access layer.
+	jobQueue := queue.NewRedisQueue(cfg.RedisAddr)                                  // Creates the Redis queue publisher for background jobs.
+	defer jobQueue.Close()                                                          // Closes the queue connection when the server exits.
+	eventPublisher := event.NewKafkaPublisher(cfg.KafkaBrokers, cfg.KafkaUserTopic) // Creates the Kafka publisher for domain events.
+	defer eventPublisher.Close()                                                    // Closes the Kafka writer when the server exits.
 
-	authService := service.NewAuthService(userRepo, cfg)     // Creates auth business logic with users and JWT config.
-	userService := service.NewUserService(userRepo)          // Creates user business logic.
-	projectService := service.NewProjectService(projectRepo) // Creates project business logic.
+	authService := service.NewAuthService(userRepo, cfg, jobQueue, eventPublisher) // Creates auth business logic with users, JWT config, jobs, and events.
+	userService := service.NewUserService(userRepo)                                // Creates user business logic.
+	projectService := service.NewProjectService(projectRepo)                       // Creates project business logic.
 
 	apiHandler := handler.NewHandler(handler.Dependencies{ // Creates HTTP handlers and injects their dependencies.
 		Config:         cfg,            // Provides app metadata for handlers such as health.
