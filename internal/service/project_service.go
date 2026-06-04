@@ -1,3 +1,5 @@
+// Why: project service owns project business rules, including ownership checks and status changes.
+// What to do: add project validation and workflow behavior here, keeping database queries in repositories.
 package service
 
 import (

@@ -1,3 +1,5 @@
+// Why: database helpers keep PostgreSQL connection and local migration setup reusable.
+// What to do: add database bootstrapping here, but keep query logic inside repositories.
 package database
 
 import (

@@ -1,3 +1,5 @@
+// Why: go.mod defines this module path, Go version, and direct/indirect dependencies.
+// What to do: use go get/go mod tidy to update this file instead of editing dependency versions by hand.
 module github.com/nattakornwarisnarathorn/example-gin
 
 go 1.24

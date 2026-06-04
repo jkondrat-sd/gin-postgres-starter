@@ -1,3 +1,5 @@
+// Why: logger setup gives the app one shared structured logger configured by environment.
+// What to do: initialize logging once at startup, then inject or import Log where needed.
 package logger
 
 import "go.uber.org/zap"

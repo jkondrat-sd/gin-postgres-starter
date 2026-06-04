@@ -1,3 +1,5 @@
+// Why: user DTOs define the public user shape returned by the API.
+// What to do: expose safe user fields here and never return password hashes.
 package dto
 
 import (

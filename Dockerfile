@@ -1,3 +1,5 @@
+# Why: this Dockerfile builds a small runnable API image for deployment.
+# What to do: keep build steps here, and add runtime files only when the server needs them.
 FROM golang:1.24-alpine AS builder
 
 WORKDIR /app

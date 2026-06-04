@@ -1,3 +1,5 @@
+// Why: config loading gives the app one typed place for environment-driven settings.
+// What to do: add new environment variables here with safe local defaults.
 package config
 
 import (

@@ -1,3 +1,5 @@
+// Why: CORS middleware defines which browser clients can call this API.
+// What to do: adjust allowed origins per environment before deploying publicly.
 package middleware
 
 import (

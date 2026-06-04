@@ -1,3 +1,5 @@
+# Why: docker compose provides local dependencies so developers can run the API without installing PostgreSQL manually.
+# What to do: add more local services here, such as Redis or mail testing, when the app grows.
 services:
   postgres:
     image: postgres:16-alpine

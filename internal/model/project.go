@@ -1,3 +1,5 @@
+// Why: project models define stored project data and valid status values.
+// What to do: add persistent project fields or enums here before exposing them through DTOs.
 package model
 
 import "gorm.io/gorm"

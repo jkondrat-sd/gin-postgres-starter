@@ -1,3 +1,5 @@
+// Why: response helpers keep API success and error JSON shapes consistent across handlers.
+// What to do: add new response helpers here when many handlers need the same format.
 package response
 
 import (

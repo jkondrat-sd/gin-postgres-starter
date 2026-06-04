@@ -1,3 +1,5 @@
+// Why: user service owns business behavior for user-facing data.
+// What to do: add user profile rules here before touching repositories or handlers.
 package service
 
 import (

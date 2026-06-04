@@ -1,3 +1,5 @@
+// Why: auth handlers own the HTTP details for registration and login requests.
+// What to do: validate request bodies here, then delegate password and token logic to AuthService.
 package handler
 
 import (

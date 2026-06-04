@@ -1,3 +1,5 @@
+// Why: handlers translate HTTP requests into service calls and service results into HTTP responses.
+// What to do: keep shared handler dependencies and request helpers here, not domain rules.
 package handler
 
 import (

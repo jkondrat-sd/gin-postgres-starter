@@ -1,3 +1,5 @@
+// Why: project routes map project URLs to project handlers without containing business logic.
+// What to do: add project-related endpoints here, such as members, tasks, or archived project views.
 package routes
 
 import (

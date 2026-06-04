@@ -1,3 +1,5 @@
+-- Why: this migration documents the first production-style database schema for users and projects.
+-- What to do: add future schema changes in new numbered migration files instead of editing old applied migrations.
 CREATE TABLE IF NOT EXISTS users (
     id BIGSERIAL PRIMARY KEY,
     email TEXT NOT NULL UNIQUE,

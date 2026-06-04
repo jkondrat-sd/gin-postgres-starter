@@ -1,3 +1,5 @@
+// Why: auth routes stay together so public login/register endpoints are easy to find.
+// What to do: add public authentication endpoints here, such as refresh token or forgot password.
 package routes
 
 import (

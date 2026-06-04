@@ -1,3 +1,5 @@
+// Why: project repositories keep project database access separate from business rules.
+// What to do: add project query methods here, and keep ownership filters close to the SQL/GORM call.
 package repository
 
 import (

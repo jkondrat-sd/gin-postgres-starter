@@ -1,3 +1,5 @@
+// Why: the health handler returns a small status payload for uptime checks and local debugging.
+// What to do: keep this response fast and avoid expensive business queries.
 package handler
 
 import (

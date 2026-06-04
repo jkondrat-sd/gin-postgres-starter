@@ -1,3 +1,5 @@
+// Why: auth service owns authentication rules such as duplicate email checks, password hashing, and JWT creation.
+// What to do: add login/register business behavior here instead of putting security logic in handlers.
 package service
 
 import (

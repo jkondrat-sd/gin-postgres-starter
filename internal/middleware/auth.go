@@ -1,3 +1,5 @@
+// Why: auth middleware validates JWTs before protected handlers run.
+// What to do: keep token parsing here and store trusted identity values in Gin context.
 package middleware
 
 import (

@@ -1,3 +1,5 @@
+// Why: user handlers expose endpoints for data about the authenticated user.
+// What to do: read identity from middleware context and delegate user lookup to UserService.
 package handler
 
 import (

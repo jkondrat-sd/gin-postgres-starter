@@ -1,3 +1,5 @@
+// Why: auth DTOs define the JSON contract for login/register requests and auth responses.
+// What to do: change external auth payloads here without leaking database models to clients.
 package dto
 
 type RegisterRequest struct {

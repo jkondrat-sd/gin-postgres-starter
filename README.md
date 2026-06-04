@@ -1,5 +1,8 @@
 # Example Gin
 
+> Why: this README is the starter guide for understanding, running, and testing the project.
+> What to do: update it whenever routes, setup commands, or project structure change.
+
 A reusable Go/Gin prototype API using the layered structure from the Notion cheatsheet:
 
 - `handler`: HTTP request/response layer

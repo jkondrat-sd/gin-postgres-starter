@@ -1,3 +1,5 @@
+// Why: project DTOs define project request validation and response payloads for the API.
+// What to do: add client-facing project fields here and convert from models in mapper functions.
 package dto
 
 import (

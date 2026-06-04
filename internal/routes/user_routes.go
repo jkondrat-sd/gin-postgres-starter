@@ -1,3 +1,5 @@
+// Why: user routes group authenticated user endpoints separately from auth endpoints.
+// What to do: add profile/account routes here when they belong to the current user.
 package routes
 
 import (

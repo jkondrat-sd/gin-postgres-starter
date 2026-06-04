@@ -1,3 +1,5 @@
+// Why: project handlers keep HTTP parsing and response formatting for project endpoints in one file.
+// What to do: parse route/body data here, then delegate ownership and persistence rules to ProjectService.
 package handler
 
 import (

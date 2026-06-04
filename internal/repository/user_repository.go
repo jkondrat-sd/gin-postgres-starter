@@ -1,3 +1,5 @@
+// Why: user repositories isolate database queries for users behind a small interface.
+// What to do: add user query methods here when services need new persistence operations.
 package repository
 
 import (
