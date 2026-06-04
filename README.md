@@ -3,6 +3,7 @@
 A reusable Go/Gin prototype API using the layered structure from the Notion cheatsheet:
 
 - `handler`: HTTP request/response layer
+- `routes`: Gin route grouping and middleware wiring
 - `service`: business logic
 - `repository`: database access
 - `model`: GORM models

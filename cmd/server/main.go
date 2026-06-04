@@ -7,6 +7,7 @@ import (
 	"github.com/nattakornwarisnarathorn/example-gin/internal/config"
 	"github.com/nattakornwarisnarathorn/example-gin/internal/handler"
 	"github.com/nattakornwarisnarathorn/example-gin/internal/repository"
+	"github.com/nattakornwarisnarathorn/example-gin/internal/routes"
 	"github.com/nattakornwarisnarathorn/example-gin/internal/service"
 	"github.com/nattakornwarisnarathorn/example-gin/pkg/database"
 	"github.com/nattakornwarisnarathorn/example-gin/pkg/logger"
@@ -49,7 +50,7 @@ func main() {
 		ProjectService: projectService,
 	})
 
-	router := handler.SetupRouter(apiHandler)
+	router := routes.SetupRouter(apiHandler, cfg)
 
 	addr := ":" + cfg.AppPort
 	logger.Log.Info("server running", zap.String("addr", addr))
